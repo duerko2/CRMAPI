@@ -1,5 +1,6 @@
 package CRMarcusAPI;
 
+import CRMarcusAPI.model.BrandAreaCustomer;
 import CRMarcusAPI.model.Customer;
 import CRMarcusAPI.model.Order;
 
@@ -98,5 +99,65 @@ public class ServiceLayer {
         }
         return names;
 
+    }
+
+    public List<BrandAreaCustomer> getBrandAreaCustomer(String area,String brand) throws SQLException{
+        List<Customer> customers = new ArrayList<>();
+        List<BrandAreaCustomer> brandAreaCustomers = new ArrayList<>();
+        List<Order> orders = new ArrayList<>();
+
+
+        ResultSet resultSet = dataLayer.getBrandAreaCustomer(brand,area);
+        resultSet.beforeFirst(); // Set pointer for resultSet.next()
+
+        // Adds all customers and order to a list
+        while (resultSet.next()) {
+            Customer customer = new Customer(
+                    resultSet.getInt(9),
+                    resultSet.getString(1),
+                    resultSet.getString(10),
+                    resultSet.getInt(8)
+            );
+            customers.add(customer);
+            orders.add(
+                    new Order(
+                            resultSet.getInt(2),
+                            resultSet.getInt(3),
+                            resultSet.getString(4),
+                            resultSet.getString(5),
+                            resultSet.getString(6),
+                            new Date(resultSet.getDate(7).getTime()),
+                            resultSet.getInt(8),
+                            brand,
+                            area,
+                            customer
+                    )
+            );
+        }
+
+
+
+
+        // Remove duplicate customers.
+        List<Customer> customersWithNoDuplicates = new ArrayList<>();
+        for (Customer customer : customers) {
+            if (!customersWithNoDuplicates.contains(customer)) {
+                customersWithNoDuplicates.add(customer);
+            }
+        }
+
+        // add all customers to list of BrandAreaCustomer. Then add all orders corresponding with the customer to the BrandAreaCustomer
+        for(Customer customer : customersWithNoDuplicates){
+            BrandAreaCustomer newBrandAreaCustomer = new BrandAreaCustomer(customer);
+            for(Order order : orders){
+                if(order.getCustomer().getAccountNo()==customer.getAccountNo()){
+                    newBrandAreaCustomer.getOrders().add(order);
+                }
+            }
+            brandAreaCustomers.add(newBrandAreaCustomer);
+        }
+
+
+        return brandAreaCustomers;
     }
 }

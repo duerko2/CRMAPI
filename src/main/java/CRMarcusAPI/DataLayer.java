@@ -56,10 +56,8 @@ public class DataLayer {
 
     public ResultSet getCustomer(int id) throws SQLException {
         Connection connection = DriverManager.getConnection(url, username, password);
-
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM customer WHERE accountNo=?;");
         statement.setInt(1,id);
-
         return statement.executeQuery();
     }
 
@@ -71,10 +69,17 @@ public class DataLayer {
 
     public ResultSet getAreas(String id) throws SQLException{
         Connection connection = DriverManager.getConnection(url, username, password);
-        System.out.println("AREA");
-
         PreparedStatement statement = connection.prepareStatement("SELECT areaName FROM brand WHERE brandName=?;");
         statement.setString(1,id);
+
+        return statement.executeQuery();
+    }
+
+    public ResultSet getBrandAreaCustomer(String brand,String area) throws SQLException{
+        Connection connection = DriverManager.getConnection(url, username, password);
+        PreparedStatement statement = connection.prepareStatement("SELECT accountName, orderNum, amount, currencyName, orderType, seasonId, orderDate, orders.salesRepid, orders.accountNo, customer.country FROM orders JOIN customer WHERE areaName=? AND brandName=? AND orders.accountNo=customer.accountNo;");
+        statement.setString(1,area);
+        statement.setString(2,brand);
 
         return statement.executeQuery();
     }

@@ -1,5 +1,6 @@
 package CRMarcusAPI;
 
+import CRMarcusAPI.model.BrandAreaCustomer;
 import CRMarcusAPI.model.Customer;
 import CRMarcusAPI.model.Order;
 import org.springframework.web.bind.annotation.*;
@@ -83,6 +84,17 @@ public class ControllerLayer {
             return names;
         }
         return names;
+    }
+
+    @GetMapping(value = "/brands/{brand}/{areaName}/customers")
+    public List<BrandAreaCustomer> getBrandAreaCustomer(@PathVariable("brand") String brand,@PathVariable("areaName") String areaNames){
+        List<BrandAreaCustomer> result = new ArrayList<>();
+        try {
+            result = serviceLayer.getBrandAreaCustomer(areaNames,brand);
+        } catch (SQLException sqlException) {
+            return result;
+        }
+        return result;
     }
 
 }

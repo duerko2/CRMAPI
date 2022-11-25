@@ -27,6 +27,17 @@ public class Order {
         this.areaName = areaName;
         this.customer=customer;
     }
+    public Order(int orderNum, int amount, String currencyName, String orderType, String seasonId, Date orderDate, int salesRepId, String brandName, String areaName) {
+        this.orderNum = orderNum;
+        this.amount = amount;
+        this.currencyName = currencyName;
+        this.orderType = orderType;
+        this.seasonId = seasonId;
+        this.orderDate = orderDate;
+        this.salesRepId = salesRepId;
+        this.brandName = brandName;
+        this.areaName = areaName;
+    }
 
     public int getOrderNum() {
         return orderNum;
